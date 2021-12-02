@@ -8,6 +8,7 @@
 -- 1.10 Видалити кожен n-й елемент списку, напр. при n=2: "1234590"⇒"1350".
 
 --з вбудованими функціями
+
 dropEvery _ [] = []
 dropEvery 0 xs = xs
 dropEvery n xs = take (n-1) xs ++ dropEvery n (drop n xs)
