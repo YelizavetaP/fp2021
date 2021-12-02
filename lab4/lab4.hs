@@ -1,71 +1,81 @@
---Лабораторна робота 4
---студентки групи КН-31 підгрупи 1
---Попової Єлизавети
+{-# OPTIONS_GHC -Wno-incomplete-patterns #-}
+--Лабораторна робота №4
+--студентки групи КН-31 підгрупа 1
+--Попова Єлизавета
 --Варіант 10
 
--- :load lab4\\lab4.hs
+--Мета: Ознайомитись з системою типiв та класiв типiв. Набути досвiду визначення нових типiв та класiв типiв i їх використання.
 
+--Публiкацiї. Зберiгаються данi про публiкацiї, якi можуть бути книгою (автор/спiвавтори, назва, мiсто, видавництво, рiк), 
+--статтею (автор/спiвавтори, назва статтi, назва журналу, рiк, номер журналу, сторiнки) або 
+--тезами доповiдi (автор/спiвавтори, назва доповiдi, назва конференцiї, мiсто, рiк, сторiнки). Визначне функцiї для :
 
--- Публiкацiї. Зберiгаються данi про публiкацiї, якi можуть бути книгою (ав-
--- тор/спiвавтори, назва, мiсто, видавництво, рiк), статтею (автор/спiвавтори, на-
--- зва статтi, назва журналу, рiк, номер журналу, сторiнки) або тезами доповiдi
--- (автор/спiвавтори, назва доповiдi, назва конференцiї, мiсто, рiк, сторiнки). Ви-
--- значне функцiї для :
-
--- статистика публiкацiй автора — кiлькiсть, обсяг (у сторiнках), тип;
+--статистика публiкацiй автора 
 
 data Book = Book {
-    authorBook :: String,
-    nameBook :: String,
-    cityBook :: String,
-    published :: String,
-    yearBook :: Int
+bookAuthor :: String,
+bookName :: String,
+bookCity :: String,
+publishingHouse :: String,
+bookYear :: Int
 } deriving (Eq, Show)
 
 data Article = Article {
-    authorArticle :: String,
-    nameArticle :: String,
-    magazineName :: String,
-    yearArticle :: Int,
-    magazineNumber :: Int,
-    pageNumber :: Int
+articleAuthor :: String,
+articleName :: String,
+magazine :: String,
+articleYear :: Int,
+magazineNumber :: Int,
+pageCount :: Int
 } deriving (Eq, Show)
 
 data Thesis = Thesis {
-    authorThesis :: String,
-    nameThesis :: String,
-    nameConference :: String,
-    cityThesis :: String,
-    yearThesis :: Int,
-    pageThesis:: Int
+thesisAuthor :: String,
+thesisName :: String,
+conference :: String,
+thesisCity :: String,
+thesisYear :: Int,
+pageCountThesis:: Int
 } deriving (Eq, Show)
 
 
-fBook :: [Book]
-fBook = [(Book "AB" "First Book" "Kiev" "p1" 1982),(Book "BB" "Second Book" "Lviv" "p2" 1999),(Book "CB" "Ftird Book" "Moscow" "p3" 2001) ]
+arrBook :: [Book]
+arrBook = [(Book "Leo Tolstoy" "Anna Karenina" "Moscow" "Neva" 1878),(Book "Harper Lee" "To Kill a Mockingbird" "New York" "TM" 1960),(Book "Harper Lee" "To be a Mockingbird" "New York" "TM" 1965)]
+arrArticle :: [Article]
+arrArticle = [(Article "Harper Lee" "How to survive" "New York Times" 1970 54 50),(Article "Sofia Recaro" "BIrd in Antarctica" "Zootrop" 2005 20 10)]
 
-fArticle :: [Article]
-fArticle = [(Article "AA" "First Article" "magazine1" 2021 8 32),(Article "BA" "Second Article" "magazine2" 1986 24 215)]
+arrThesis :: [Thesis]
+arrThesis = [(Thesis "Harper Lee" "How to become happy" "Live conference №15" "London" 1980 120)]
 
-fThesis :: [Thesis]
-fThesis = [(Thesis "AT" "First Thesis" "conference1" "Kiev" 2018 9)]
 
-applyEach :: [(a -> b)] -> [a] -> [b]
-applyEach _ [] = []
-applyEach (x:xs) (y:ys) = x y : applyEach xs ys
+findBooks' :: String -> [Book] -> [Book]
+findBooks' _ [] = []
+findBooks' x (y : ys) = if x == bookAuthor y then  y : findBooks' x ys  else findBooks' x ys
 
-elem' :: String -> [Book] -> String
-elem' _ [] = "False"
-elem' x (y : ys) = if x == authorBook y then nameBook y else elem' x ys
+findArticles' :: String -> [Article] -> [Article]
+findArticles' _ [] = []
+findArticles' x (y : ys) = if x == articleName y then  y : findArticles' x ys else findArticles' x ys
 
-elem2' :: String -> [Article] -> String
-elem2' _ [] = "False"
-elem2' x (y : ys) = if x == authorArticle y then nameArticle y else elem2' x ys
+findThesis' :: String -> [Thesis] -> [Thesis]
+findThesis' _ [] =[]
+findThesis' x (y : ys) = if x == thesisAuthor y then  y : findThesis' x ys else findThesis' x ys
 
-elem3' :: String -> [Thesis] -> String
-elem3' _ [] = "False"
-elem3' x (y : ys) = if x == authorThesis y then nameThesis y else elem3' x ys
+checkAuthor :: String -> ([Book],[Article],[Thesis])
+checkAuthor a = (findBooks' a arrBook, findArticles' a arrArticle,findThesis' a arrThesis)
 
-check :: String -> [String]
-check a = [elem' a fBook, elem2' a fArticle,elem3' a fThesis]
+info :: ([Book],[Article],[Thesis]) -> [(Int, String)]
+info (x,y,z) = [(length x,"Book"),(length y,"Article"),(length z,"Thesis")]
+
+find :: String->[(Int,String)]
+find x = info(checkAuthor x)
     
+
+-- find "Harper Lee"       
+-- [(2,"Book"),(1,"Article"),(1,"Thesis")]
+
+-- find "Leo Tolstoy"    
+-- [(1,"Book"),(0,"Article"),(0,"Thesis")]
+
+
+--Висновок: В ході лабораторної роботи ми ознайомились з системою типiв та класiв типiв та набули досвiду визначення нових типiв та класiв типiв i їх використання.
+
